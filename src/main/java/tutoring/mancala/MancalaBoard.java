@@ -1,3 +1,5 @@
+package tutoring.mancala;
+
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -242,7 +244,7 @@ public class MancalaBoard {
      **/
 
     int getWinner() {
-        if ((Arrays.compare(pits1, GAMEOVER) == 0) || (Arrays.compare(pits2,GAMEOVER) == 0)) {
+        if ((Arrays.equals(pits1, GAMEOVER)) || (Arrays.equals(pits2,GAMEOVER))) {
             sweep();
             if (mancala1 > mancala2)
                 return 1;

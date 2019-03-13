@@ -1,3 +1,5 @@
+package tutoring.mancala;
+
 import java.util.Scanner;
 
 /**
