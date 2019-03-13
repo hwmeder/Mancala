@@ -92,10 +92,15 @@ public class Player {
 	}
 
 	private void steal(int stones, int current) {
-		if (stones == 0 && current <= pits.length && pits[current-1] == 1) {
+		if (stones == 0 && current <= pits.length && pits[current - 1] == 1) {
 			mancala += pits[current - 1];
 			pits[current - 1] = 0;
-			mancala += opponent.giveMe(pits.length - current);
+
+			int targetPit = pits.length - current;
+			int stolen = opponent.giveMe(targetPit);
+
+			mancala += stolen;
+			System.out.println("Stole " + stolen + " stones from pit " + (targetPit + 1) + ".");
 		}
 	}
 
@@ -124,21 +129,21 @@ public class Player {
 	public String labels() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<");
-		for (int i=0; i< pits.length ; i++) {
+		for (int i = 0; i < pits.length; i++) {
 			sb.append(' ');
-			if(pits[i] > 9) {
+			if (pits[i] > 9) {
 				sb.append(' ');
 			}
-			sb.append(i+1);
+			sb.append(i + 1);
 			sb.append(' ');
 		}
 		sb.append('>');
 		String display = sb.toString();
 		sb.append(" M");
-		if(mancala > 99) {
+		if (mancala > 99) {
 			sb.append('M');
 		}
-		if(mancala > 9) {
+		if (mancala > 9) {
 			sb.append('M');
 		}
 		sb.append(' ');

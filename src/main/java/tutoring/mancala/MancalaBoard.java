@@ -45,6 +45,7 @@ public class MancalaBoard {
 					if (winner < 0) {
 						System.out.print(player + ": Which pit will you play from? ");
 						pit = kbd.nextInt();
+						System.out.println();
 					}
 				} while (winner < 0 && !players[player].valid(pit));
 			} while (winner < 0 && playMove(player, pit));
@@ -62,8 +63,8 @@ public class MancalaBoard {
 	 */
 
 	void display(int player) {
-		System.out.println(player +": "+players[player].display()+players[(player+1)%2].display());
-		System.out.println("P: "+players[player].labels()+players[(player+1)%2].labels());
+		System.out.println(player + ": " + players[player].display() + players[(player + 1) % 2].display());
+		System.out.println("P: " + players[player].labels() + players[(player + 1) % 2].labels());
 	}
 
 	/**
