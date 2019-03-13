@@ -25,29 +25,25 @@ public class MancalaBoard {
 			new Player(BOARDSIZE)
 	};
 
-	/**
-	 *
-	 * Coordinates the play of one game.
-	 * 
-	 * @param kbd2
-	 *
-	 */
+	public MancalaBoard() {
+		super();
+	}
 
 	void play(Scanner kbd) {
 		players[0].setOpponent(players[1]);
 		players[1].setOpponent(players[0]);
 
-		System.out.println("Here's the board; your pits are on the bottom, and your mancala on the right:");
+		System.out.println("Here's the board; your pits are on the left, followed by your mancala.");
 		int player = 0;
 		int winner = -1;
 		int pit = -1;
 		do {
 			do { // this loop handles "extra" turns for landing in an empty pit
-				display();
+				display(player);
 				do { // this loop makes sure the selected pit is valid for play
 					winner = getWinner();
 					if (winner < 0) {
-						System.out.print("Which pit will you play from (" + player + ")? ");
+						System.out.print(player + ": Which pit will you play from? ");
 						pit = kbd.nextInt();
 					}
 				} while (winner < 0 && !players[player].valid(pit));
@@ -55,8 +51,8 @@ public class MancalaBoard {
 			player = (player + 1) % 2;
 
 		} while (winner < 0);
-		display();
 		System.out.println("The winner is " + winner);
+		display(winner);
 	}
 
 	/**
@@ -65,21 +61,9 @@ public class MancalaBoard {
 	 *
 	 */
 
-	void display() {
-		System.out.println("   6   5   4   3   2   1  ");
-		System.out.println("--------------------------");
-		displayPitsNorth(players[1].getPits());
-
-		System.out.println();
-		System.out.format("%4d", players[1].getMancala());
-		System.out.print("                ");
-		System.out.format("%4d", players[0].getMancala());
-		System.out.println();
-		System.out.println();
-		displayPitsSouth(players[0].getPits());
-		System.out.println("--------------------------");
-		System.out.println("   1   2   3   4   5   6  ");
-		System.out.println();
+	void display(int player) {
+		System.out.println(player +": "+players[player].display()+players[(player+1)%2].display());
+		System.out.println("P: "+players[player].labels()+players[(player+1)%2].labels());
 	}
 
 	/**
@@ -148,11 +132,11 @@ public class MancalaBoard {
 			int mancala2 = players[1].getMancala();
 
 			if (mancala1 > mancala2)
-				return 1;
-			else if (mancala2 > mancala1)
-				return 2;
-			else
 				return 0;
+			else if (mancala2 > mancala1)
+				return 1;
+			else
+				return 2;
 		} else
 			return -1;
 	}
@@ -168,4 +152,5 @@ public class MancalaBoard {
 			player.sweep();
 		}
 	}
+
 }

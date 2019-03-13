@@ -108,4 +108,40 @@ public class Player {
 	public void setOpponent(Player player) {
 		this.opponent = player;
 	}
+
+	public String display() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<");
+		for (int pit : pits) {
+			sb.append(' ').append(pit).append(' ');
+		}
+		sb.append('>');
+		String display = sb.toString();
+		sb.append(' ').append(mancala).append(' ');
+		return sb.toString();
+	}
+
+	public String labels() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<");
+		for (int i=0; i< pits.length ; i++) {
+			sb.append(' ');
+			if(pits[i] > 9) {
+				sb.append(' ');
+			}
+			sb.append(i+1);
+			sb.append(' ');
+		}
+		sb.append('>');
+		String display = sb.toString();
+		sb.append(" M");
+		if(mancala > 99) {
+			sb.append('M');
+		}
+		if(mancala > 9) {
+			sb.append('M');
+		}
+		sb.append(' ');
+		return sb.toString();
+	}
 }
