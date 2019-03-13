@@ -34,11 +34,13 @@ public class MancalaBoard {
 	 */
 
 	void play(Scanner kbd) {
-		int pit = -1;
+		players[0].setOpponent(players[1]);
+		players[1].setOpponent(players[0]);
 
 		System.out.println("Here's the board; your pits are on the bottom, and your mancala on the right:");
 		int player = 0;
 		int winner = -1;
+		int pit = -1;
 		do {
 			do { // this loop handles "extra" turns for landing in an empty pit
 				display();

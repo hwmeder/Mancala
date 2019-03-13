@@ -6,6 +6,7 @@ public class Player {
 
 	private int mancala = 0;
 	private int[] pits;
+	private Player opponent;
 
 	public Player(int boardsize) {
 		pits = new int[boardsize];
@@ -67,6 +68,7 @@ public class Player {
 			pits[current++]++;
 			stones--;
 		}
+		steal(stones, current);
 		return incrementMancala(stones);
 	}
 
@@ -80,7 +82,30 @@ public class Player {
 	}
 
 	public int spreadMyStones(int stones) {
-		stones = spreadTheirStones(stones);
+		int current = 0;
+		while (current < pits.length && stones > 0) {
+			pits[current++]++;
+			stones--;
+		}
+		steal(stones, current);
 		return incrementMancala(stones);
+	}
+
+	private void steal(int stones, int current) {
+		if (stones == 0 && current <= pits.length && pits[current-1] == 1) {
+			mancala += pits[current - 1];
+			pits[current - 1] = 0;
+			mancala += opponent.giveMe(pits.length - current);
+		}
+	}
+
+	private int giveMe(int pit) {
+		int stones = pits[pit];
+		pits[pit] = 0;
+		return stones;
+	}
+
+	public void setOpponent(Player player) {
+		this.opponent = player;
 	}
 }
