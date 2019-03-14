@@ -12,41 +12,35 @@ public class MancalaBoard {
 	// if one player's pits are empty, the game is over
 	public static final int GAMEOVER[] = new int[BOARDSIZE];
 
-	private Player[] players;
+	private Set<Player> players = new HashSet<>();
 
 	public MancalaBoard(Scanner kbd) {
 		super();
-		players = new Player[] {
-				new Player(0, BOARDSIZE, kbd),
-				new Player(1, BOARDSIZE, kbd)
-		};
-		players[0].setOpponent(players[1]);
-		players[1].setOpponent(players[0]);
-	}
+		Player first = new Player(0, BOARDSIZE, kbd);
+		players.add(first);
+		
+		Player last = first;
+		last = new Player(1, BOARDSIZE, kbd).withOpponent(last);
+		players.add(last);
+		
+		first.withOpponent(last);
+		}
 
 	public void play() {
 		System.out.println("Here's the board; your pits are on the left, followed by your mancala.");
-		int player = 0;
-		do { // this loop handles "extra" turns for landing in an empty pit
-		} while (players[(player++) % 2].move());
+		Player player = players.iterator().next();
+		while (player.move()) {
+			player = player.getOpponent();
+		}
 
-		Set<Player> winners = getWinners();
-
-		System.out.println("The winner is " + winners);
-		System.out.print(winners + ": ");
-		int winner = winners.iterator().next().getId();
-		players[winner % 2].display(players[winner % 2]);
-		System.out.println();
+		reportResults();
 	}
 
-	/**
-	 * @return return 0 or 1 to indicate winning player or -1 if tie
-	 **/
-
-	private Set<Player> getWinners() {
+	private void reportResults() {
 		for (Player player : players) {
 			player.sweep();
 		}
+
 		int maxMancala = 0;
 		Set<Player> winners = new HashSet<>();
 		for (Player player : players) {
@@ -58,7 +52,12 @@ public class MancalaBoard {
 				winners.add(player);
 			}
 		}
-		return winners;
+
+		System.out.println("The winner is " + winners);
+		System.out.print(winners + ": ");
+		Player winner = winners.iterator().next();
+		winner.display(winner);
+		System.out.println();
 	}
 
 }

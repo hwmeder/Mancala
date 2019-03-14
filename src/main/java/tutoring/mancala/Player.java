@@ -115,8 +115,9 @@ public class Player {
 		return stones;
 	}
 
-	public void setOpponent(Player player) {
+	public Player withOpponent(Player player) {
 		this.opponent = player;
+		return this;
 	}
 
 	public void display(Player currentPlayer) {
@@ -194,5 +195,9 @@ public class Player {
 	@Override
 	public String toString() {
 		return Integer.toString(id);
+	}
+
+	public Player getOpponent() {
+		return opponent;
 	}
 }
