@@ -8,11 +8,11 @@ public class Player {
 	private int mancala = 0;
 	private int[] pits;
 	private Player opponent;
-	private int id;
+	private String name;
 	private Scanner kbd;
 
-	public Player(int id, int boardsize, Scanner kbd) {
-		this.id = id;
+	public Player(String string, int boardsize, Scanner kbd) {
+		this.name = string;
 		this.kbd = kbd;
 		pits = new int[boardsize];
 		Arrays.fill(pits, 4);
@@ -163,14 +163,15 @@ public class Player {
 	public boolean move() {
 		int stones = -1;
 		while (stones < 0) {
-			System.out.print("P: ");
+			System.out.print(name.replaceAll(".", "P"));
+			System.out.print(": ");
 			labels(this);
 			System.out.println();
-			System.out.print(id + ": ");
+			System.out.print(name + ": ");
 			display(this);
 			int pit;
 			do {
-				System.out.print("\n" + id + ": Which pit will you play from? ");
+				System.out.print("\n" + name + ": Which pit will you play from? ");
 				pit = kbd.nextInt();
 			} while (!valid(pit));
 			System.out.println();
@@ -188,13 +189,13 @@ public class Player {
 		return true;
 	}
 
-	public int getId() {
-		return id;
+	public String getName() {
+		return name;
 	}
 
 	@Override
 	public String toString() {
-		return Integer.toString(id);
+		return name;
 	}
 
 	public Player getOpponent() {

@@ -16,11 +16,11 @@ public class MancalaBoard {
 
 	public MancalaBoard(Scanner kbd) {
 		super();
-		Player first = new Player(0, BOARDSIZE, kbd);
+		Player first = new Player("Bill", BOARDSIZE, kbd);
 		players.add(first);
 		
 		Player last = first;
-		last = new Player(1, BOARDSIZE, kbd).withOpponent(last);
+		last = new Player("Jane", BOARDSIZE, kbd).withOpponent(last);
 		players.add(last);
 		
 		first.withOpponent(last);
