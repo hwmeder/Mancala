@@ -23,14 +23,14 @@ public class PlayMancala {
 	 */
 
 	public static void main(String[] args) {
-		MancalaBoard board = new MancalaBoard();
+		Scanner kbd = new Scanner(System.in);
+		MancalaBoard board = new MancalaBoard(kbd);
 
 		System.out.println("Welcome to Mancala!");
 
-		Scanner kbd = new Scanner(System.in);
 		String input;
 		try {
-			board.play(kbd);
+			board.play();
 		} finally {
 			kbd.close();
 		}

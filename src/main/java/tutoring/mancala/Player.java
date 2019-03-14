@@ -1,14 +1,19 @@
 package tutoring.mancala;
 
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Player {
 
 	private int mancala = 0;
 	private int[] pits;
 	private Player opponent;
+	private int id;
+	private Scanner kbd;
 
-	public Player(int boardsize) {
+	public Player(int id, int boardsize, Scanner kbd) {
+		this.id = id;
+		this.kbd = kbd;
 		pits = new int[boardsize];
 		Arrays.fill(pits, 4);
 	}
@@ -114,7 +119,7 @@ public class Player {
 		this.opponent = player;
 	}
 
-	public String display() {
+	public void display() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<");
 		for (int pit : pits) {
@@ -123,10 +128,10 @@ public class Player {
 		sb.append('>');
 		String display = sb.toString();
 		sb.append(' ').append(mancala).append(' ');
-		return sb.toString();
+		System.out.print(sb.toString());
 	}
 
-	public String labels() {
+	public void labels() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<");
 		for (int i = 0; i < pits.length; i++) {
@@ -147,6 +152,33 @@ public class Player {
 			sb.append('M');
 		}
 		sb.append(' ');
-		return sb.toString();
+		System.out.print(sb.toString());
+	}
+
+	public boolean move() {
+		int stones = -1;
+		while (stones < 0) {
+			System.out.print("P: ");
+			labels();
+			opponent.labels();
+			System.out.println();
+			System.out.print(id + ": ");
+			display();
+			opponent.display();
+			System.out.print("\n" + id + ": Which pit will you play from? ");
+			int pit = kbd.nextInt();
+			System.out.println();
+			stones = empty(pit - 1);
+			while (stones > 0) {
+				stones = opponent.spreadTheirStones(stones);
+				if (stones > 0) {
+					stones = spreadMyStones(stones);
+				}
+			}
+			if(Arrays.equals(pits, MancalaBoard.GAMEOVER)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
