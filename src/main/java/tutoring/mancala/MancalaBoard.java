@@ -22,7 +22,7 @@ public class MancalaBoard {
 		players[1].setOpponent(players[0]);
 	}
 
-	void play() {
+	public void play() {
 		System.out.println("Here's the board; your pits are on the left, followed by your mancala.");
 		int player = 0;
 		do { // this loop handles "extra" turns for landing in an empty pit
@@ -32,8 +32,7 @@ public class MancalaBoard {
 
 		System.out.println("The winner is " + winner);
 		System.out.print(winner + ": ");
-		players[winner % 2].display();
-		players[(winner + 1) % 2].display();
+		players[winner % 2].display(players[winner % 2]);
 		System.out.println();
 	}
 

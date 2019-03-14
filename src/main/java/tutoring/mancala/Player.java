@@ -119,7 +119,7 @@ public class Player {
 		this.opponent = player;
 	}
 
-	public void display() {
+	public void display(Player currentPlayer) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<");
 		for (int pit : pits) {
@@ -128,9 +128,12 @@ public class Player {
 		sb.append('>');
 		sb.append(' ').append(mancala).append(' ');
 		System.out.print(sb.toString());
+		if (currentPlayer != opponent) {
+			opponent.display(currentPlayer);
+		}
 	}
 
-	public void labels() {
+	public void labels(Player currentPlayer) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<");
 		for (int i = 0; i < pits.length; i++) {
@@ -151,18 +154,19 @@ public class Player {
 		}
 		sb.append(' ');
 		System.out.print(sb.toString());
+		if (currentPlayer != opponent) {
+			opponent.labels(currentPlayer);
+		}
 	}
 
 	public boolean move() {
 		int stones = -1;
 		while (stones < 0) {
 			System.out.print("P: ");
-			labels();
-			opponent.labels();
+			labels(this);
 			System.out.println();
 			System.out.print(id + ": ");
-			display();
-			opponent.display();
+			display(this);
 			int pit;
 			do {
 				System.out.print("\n" + id + ": Which pit will you play from? ");
