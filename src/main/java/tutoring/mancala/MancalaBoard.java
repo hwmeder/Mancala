@@ -1,6 +1,8 @@
 package tutoring.mancala;
 
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class MancalaBoard {
 
@@ -28,10 +30,11 @@ public class MancalaBoard {
 		do { // this loop handles "extra" turns for landing in an empty pit
 		} while (players[(player++) % 2].move());
 
-		int winner = getWinner();
+		Set<Player> winners = getWinners();
 
-		System.out.println("The winner is " + winner);
-		System.out.print(winner + ": ");
+		System.out.println("The winner is " + winners);
+		System.out.print(winners + ": ");
+		int winner = winners.iterator().next().getId();
 		players[winner % 2].display(players[winner % 2]);
 		System.out.println();
 	}
@@ -40,19 +43,22 @@ public class MancalaBoard {
 	 * @return return 0 or 1 to indicate winning player or -1 if tie
 	 **/
 
-	private int getWinner() {
+	private Set<Player> getWinners() {
 		for (Player player : players) {
 			player.sweep();
 		}
-		int mancala1 = players[0].getMancala();
-		int mancala2 = players[1].getMancala();
-
-		if (mancala1 > mancala2) {
-			return 0;
-		} else if (mancala2 > mancala1) {
-			return 1;
+		int maxMancala = 0;
+		Set<Player> winners = new HashSet<>();
+		for (Player player : players) {
+			if (player.getMancala() > maxMancala) {
+				winners.clear();
+				winners.add(player);
+				maxMancala = player.getMancala();
+			} else if (player.getMancala() == maxMancala) {
+				winners.add(player);
+			}
 		}
-		return -1;
+		return winners;
 	}
 
 }

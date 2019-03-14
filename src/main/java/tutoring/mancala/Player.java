@@ -171,7 +171,7 @@ public class Player {
 			do {
 				System.out.print("\n" + id + ": Which pit will you play from? ");
 				pit = kbd.nextInt();
-			} while (valid(pit));
+			} while (!valid(pit));
 			System.out.println();
 			stones = empty(pit - 1);
 			while (stones > 0) {
@@ -185,5 +185,14 @@ public class Player {
 			}
 		}
 		return true;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public String toString() {
+		return Integer.toString(id);
 	}
 }
