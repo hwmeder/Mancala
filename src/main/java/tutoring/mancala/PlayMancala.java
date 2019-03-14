@@ -2,16 +2,6 @@ package tutoring.mancala;
 
 import java.util.Scanner;
 
-/**
- *
- * Main program for a mancala game. The MancalaBoard class contains all the game
- * logic.
- *
- * @author Scott Dexter
- * @version 1.1 2/26/2019
- *
- */
-
 public class PlayMancala {
 
 	/**
@@ -28,7 +18,6 @@ public class PlayMancala {
 
 		System.out.println("Welcome to Mancala!");
 
-		String input;
 		try {
 			board.play();
 		} finally {

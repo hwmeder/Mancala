@@ -126,7 +126,6 @@ public class Player {
 			sb.append(' ').append(pit).append(' ');
 		}
 		sb.append('>');
-		String display = sb.toString();
 		sb.append(' ').append(mancala).append(' ');
 		System.out.print(sb.toString());
 	}
@@ -143,7 +142,6 @@ public class Player {
 			sb.append(' ');
 		}
 		sb.append('>');
-		String display = sb.toString();
 		sb.append(" M");
 		if (mancala > 99) {
 			sb.append('M');
@@ -165,8 +163,11 @@ public class Player {
 			System.out.print(id + ": ");
 			display();
 			opponent.display();
-			System.out.print("\n" + id + ": Which pit will you play from? ");
-			int pit = kbd.nextInt();
+			int pit;
+			do {
+				System.out.print("\n" + id + ": Which pit will you play from? ");
+				pit = kbd.nextInt();
+			} while (valid(pit));
 			System.out.println();
 			stones = empty(pit - 1);
 			while (stones > 0) {
@@ -175,7 +176,7 @@ public class Player {
 					stones = spreadMyStones(stones);
 				}
 			}
-			if(Arrays.equals(pits, MancalaBoard.GAMEOVER)) {
+			if (Arrays.equals(pits, MancalaBoard.GAMEOVER)) {
 				return false;
 			}
 		}
