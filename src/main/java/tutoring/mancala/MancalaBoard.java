@@ -1,27 +1,28 @@
 package tutoring.mancala;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 
 public class MancalaBoard {
 
 	private static final int NUMBER_OF_STONES_PER_PIT = 3;
-	// number of pits for each player
-	public static final int BOARDSIZE = 4;
-	public static final int NUMBER_OF_PLAYERS = 3;
+	private static final int NUMBER_OF_PITS_PER_PLAYER = 4;
+	private static final Iterator<String> PLAYER_NAMES = Arrays.asList(new String[] {"Bill", "Jill", "Carl"}).iterator();
 
 	private Set<Player> players = new HashSet<>();
 
 	public MancalaBoard(Scanner kbd) {
 		super();
-		Player first = new Player("Player1", BOARDSIZE, kbd, NUMBER_OF_STONES_PER_PIT);
+
+		Player first = new Player(PLAYER_NAMES.next(), NUMBER_OF_PITS_PER_PLAYER, kbd, NUMBER_OF_STONES_PER_PIT);
 		players.add(first);
 
 		Player last = first;
-
-		for (int i = 2; i <= NUMBER_OF_PLAYERS; i++) {
-			last = new Player("Player" + i, BOARDSIZE, kbd, NUMBER_OF_STONES_PER_PIT).withOpponent(last);
+		while (PLAYER_NAMES.hasNext()) {
+			last = new Player(PLAYER_NAMES.next(), NUMBER_OF_PITS_PER_PLAYER, kbd, NUMBER_OF_STONES_PER_PIT).withOpponent(last);
 			players.add(last);
 		}
 
@@ -30,19 +31,30 @@ public class MancalaBoard {
 
 	public void play() {
 		System.out.println("Here's the board; your pits are on the left, followed by your mancala.");
+		
 		Player player = players.iterator().next();
 		while (player.move()) {
 			player = player.getOpponent();
 		}
 
-		reportResults();
+		sweep();
+		displayResults(getWinners());
 	}
 
-	private void reportResults() {
+	private void sweep() {
 		for (Player player : players) {
 			player.sweep();
 		}
+	}
 
+	private void displayResults(Set<Player> winners) {
+		System.out.println("Winners:");
+		for(Player winner : winners) {
+			winner.displayBoard();
+		}
+	}
+
+	private Set<Player> getWinners() {
 		int maxMancala = 0;
 		Set<Player> winners = new HashSet<>();
 		for (Player player : players) {
@@ -54,12 +66,7 @@ public class MancalaBoard {
 				winners.add(player);
 			}
 		}
-
-		System.out.println("The winner is " + winners);
-		System.out.print(winners + ": ");
-		Player winner = winners.iterator().next();
-		winner.display(winner);
-		System.out.println();
+		return winners;
 	}
 
 }

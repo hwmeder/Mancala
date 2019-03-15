@@ -4,37 +4,58 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Player {
-
-	private int mancala = 0;
-	private int[] pits;
-	private Player opponent;
 	private String name;
+	private int[] pits;
+	private int mancala = 0;
+	private Player opponent;
 	private Scanner kbd;
 
 	public Player(String string, int boardsize, Scanner kbd, int numStones) {
 		this.name = string;
-		this.kbd = kbd;
-		pits = new int[boardsize];
+		this.pits = new int[boardsize];
 		Arrays.fill(pits, numStones);
+		this.kbd = kbd;
 	}
 
 	public int getMancala() {
 		return mancala;
 	}
 
-	public int[] getPits() {
-		return pits;
+	public Player withOpponent(Player player) {
+		this.opponent = player;
+		return this;
 	}
 
-	public int incrementMancala(int stones) {
-		if (stones > 0) {
-			mancala++;
-			stones--;
-			if (stones == 0) {
-				stones--;
+	public Player getOpponent() {
+		return opponent;
+	}
+
+	public boolean move() {
+		int stones = -1;
+		while (stones < 0) {
+			displayBoard();
+			int pit = getPitToEmpty();
+			stones = empty(pit - 1);
+			if (stones < 0) {
+				continue; // Take another turn.
+			}
+			for (int pit1 : pits) {
+				if (pit1 > 0) {
+					return true; // Not the end of the game ... yet.
+				}
 			}
 		}
-		return stones;
+		return false; // Game over.
+	}
+
+	public void displayBoard() {
+		System.out.print(name.replaceAll(".", "P"));
+		System.out.print(": ");
+		displayPlayerLabels(this);
+		System.out.println();
+		System.out.print(name + ": ");
+		displayPlayerPits(this);
+		System.out.println();
 	}
 
 	public void sweep() {
@@ -44,16 +65,57 @@ public class Player {
 		}
 	}
 
-	/**
-	 *
-	 * Verifies validity of selected pit--checking both that it's in range and that
-	 * the selected pit has stones to play.
-	 *
-	 * @param pit The number of the selected pit
-	 * @return true if selected pit is viable to play from
-	 *
-	 */
-	public boolean valid(int pit) {
+	private void displayPlayerLabels(Player currentPlayer) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<");
+		for (int i = 0; i < pits.length; i++) {
+			sb.append(' ');
+			if (pits[i] > 9) {
+				sb.append(' ');
+			}
+			sb.append(i + 1);
+			sb.append(' ');
+		}
+		sb.append('>');
+		sb.append(" M");
+		if (mancala > 99) {
+			sb.append('M');
+		}
+		if (mancala > 9) {
+			sb.append('M');
+		}
+		sb.append(' ');
+		System.out.print(sb.toString());
+		if (currentPlayer != opponent) {
+			opponent.displayPlayerLabels(currentPlayer);
+		}
+	}
+
+	private void displayPlayerPits(Player currentPlayer) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<");
+		for (int pit : pits) {
+			sb.append(' ').append(pit).append(' ');
+		}
+		sb.append('>');
+		sb.append(' ').append(mancala).append(' ');
+		System.out.print(sb.toString());
+		if (currentPlayer != opponent) {
+			opponent.displayPlayerPits(currentPlayer);
+		}
+	}
+
+	private int getPitToEmpty() {
+		int pit;
+		do {
+			System.out.print(name + ": Which pit will you play from? ");
+			pit = kbd.nextInt();
+		} while (!valid(pit));
+		System.out.println();
+		return pit;
+	}
+
+	private boolean valid(int pit) {
 		if (pit < 1 || pit > pits.length) {
 			System.out.println("That is not a valid pit number. Try again.");
 			return false;
@@ -64,7 +126,7 @@ public class Player {
 		return true;
 	}
 
-	public int empty(int pit) {
+	private int empty(int pit) {
 		int stones = pits[pit];
 		pits[pit] = 0;
 
@@ -76,12 +138,12 @@ public class Player {
 		steal(stones, current);
 		stones = incrementMancala(stones);
 		if (stones > 0) {
-			stones = opponent.spreadTheirStones(stones, this);
+			stones = opponent.spreadStones(stones, this);
 		}
 		return stones;
 	}
 
-	public int spreadTheirStones(int stones, Player currentPlayer) {
+	private int spreadStones(int stones, Player currentPlayer) {
 		int current = 0;
 		while (current < pits.length && stones > 0) {
 			pits[current++]++;
@@ -92,7 +154,7 @@ public class Player {
 			stones = incrementMancala(stones);
 		}
 		if (stones > 0) {
-			stones = opponent.spreadTheirStones(stones, currentPlayer);
+			stones = opponent.spreadStones(stones, currentPlayer);
 		}
 		return stones;
 	}
@@ -116,89 +178,14 @@ public class Player {
 		return stones;
 	}
 
-	public Player withOpponent(Player player) {
-		this.opponent = player;
-		return this;
-	}
-
-	public void display(Player currentPlayer) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<");
-		for (int pit : pits) {
-			sb.append(' ').append(pit).append(' ');
-		}
-		sb.append('>');
-		sb.append(' ').append(mancala).append(' ');
-		System.out.print(sb.toString());
-		if (currentPlayer != opponent) {
-			opponent.display(currentPlayer);
-		}
-	}
-
-	public void labels(Player currentPlayer) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<");
-		for (int i = 0; i < pits.length; i++) {
-			sb.append(' ');
-			if (pits[i] > 9) {
-				sb.append(' ');
-			}
-			sb.append(i + 1);
-			sb.append(' ');
-		}
-		sb.append('>');
-		sb.append(" M");
-		if (mancala > 99) {
-			sb.append('M');
-		}
-		if (mancala > 9) {
-			sb.append('M');
-		}
-		sb.append(' ');
-		System.out.print(sb.toString());
-		if (currentPlayer != opponent) {
-			opponent.labels(currentPlayer);
-		}
-	}
-
-	public boolean move() {
-		int stones = -1;
-		while (stones < 0) {
-			System.out.print(name.replaceAll(".", "P"));
-			System.out.print(": ");
-			labels(this);
-			System.out.println();
-			System.out.print(name + ": ");
-			display(this);
-			int pit;
-			do {
-				System.out.print("\n" + name + ": Which pit will you play from? ");
-				pit = kbd.nextInt();
-			} while (!valid(pit));
-			System.out.println();
-			stones = empty(pit - 1);
-			if (stones < 0) {
-				continue;
-			}
-			for (int pit1 : pits) {
-				if (pit1 > 0) {
-					return true;
-				}
+	private int incrementMancala(int stones) {
+		if (stones > 0) {
+			mancala++;
+			stones--;
+			if (stones == 0) {
+				stones--;
 			}
 		}
-		return false;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
-
-	public Player getOpponent() {
-		return opponent;
+		return stones;
 	}
 }
