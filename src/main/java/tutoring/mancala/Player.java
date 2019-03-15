@@ -33,19 +33,30 @@ public class Player {
 	public boolean move() {
 		int stones = -1;
 		while (stones < 0) {
+			if(isGameOver()) {
+				return false;
+			}
 			displayBoard();
 			int pit = getPitToEmpty();
 			stones = empty(pit - 1);
 			if (stones < 0) {
 				continue; // Take another turn.
 			}
-			for (int pit1 : pits) {
-				if (pit1 > 0) {
-					return true; // Not the end of the game ... yet.
-				}
+			if(!isGameOver()) {
+				return true;
 			}
 		}
 		return false; // Game over.
+	}
+
+	private boolean isGameOver() {
+		boolean gameOver = true;
+		for (int pit1 : pits) {
+			if (pit1 > 0) {
+				gameOver = false;
+			}
+		}
+		return gameOver;
 	}
 
 	public void displayBoard() {
