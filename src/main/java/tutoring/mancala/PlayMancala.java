@@ -14,16 +14,29 @@ public class PlayMancala {
 
 	public static void main(String[] args) {
 		Scanner kbd = new Scanner(System.in);
-		MancalaBoard board = new MancalaBoard(new String[] {"Bill", "Jill", "Carl"}, 1, 3, kbd);
-
-		System.out.println("Welcome to Mancala!");
+		String[] playerNames = new String[] {"Bill", "Jill", "Carl"};
+		int pitsPerPlayer = 4;
+		int stonesPerPit = 3;
 
 		try {
+			if (playerNames.length < 2) {
+				System.out.println("Mancala requires at least two players!");
+				return;
+			}
+			if (pitsPerPlayer < 1) {
+				System.out.println("Mancala requires at least one pit per player!");
+				return;
+			}
+			if (stonesPerPit < 1) {
+				System.out.println("Mancala requires at least one stone per pit!");
+				return;
+			}
+			MancalaBoard board = new MancalaBoard(playerNames, pitsPerPlayer, stonesPerPit, kbd);
 			board.play();
 		} finally {
 			kbd.close();
+			System.out.println("Thanks for playing.");
 		}
 
-		System.out.println("Thanks for playing.");
 	}
 }
