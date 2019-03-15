@@ -6,25 +6,27 @@ import java.util.Set;
 
 public class MancalaBoard {
 
+	private static final int NUMBER_OF_STONES_PER_PIT = 3;
 	// number of pits for each player
-	public static final int BOARDSIZE = 6;
-
-	// if one player's pits are empty, the game is over
-	public static final int GAMEOVER[] = new int[BOARDSIZE];
+	public static final int BOARDSIZE = 4;
+	public static final int NUMBER_OF_PLAYERS = 3;
 
 	private Set<Player> players = new HashSet<>();
 
 	public MancalaBoard(Scanner kbd) {
 		super();
-		Player first = new Player("Bill", BOARDSIZE, kbd);
+		Player first = new Player("Player1", BOARDSIZE, kbd, NUMBER_OF_STONES_PER_PIT);
 		players.add(first);
-		
+
 		Player last = first;
-		last = new Player("Jane", BOARDSIZE, kbd).withOpponent(last);
-		players.add(last);
-		
-		first.withOpponent(last);
+
+		for (int i = 2; i <= NUMBER_OF_PLAYERS; i++) {
+			last = new Player("Player" + i, BOARDSIZE, kbd, NUMBER_OF_STONES_PER_PIT).withOpponent(last);
+			players.add(last);
 		}
+
+		first.withOpponent(last);
+	}
 
 	public void play() {
 		System.out.println("Here's the board; your pits are on the left, followed by your mancala.");

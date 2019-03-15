@@ -11,11 +11,11 @@ public class Player {
 	private String name;
 	private Scanner kbd;
 
-	public Player(String string, int boardsize, Scanner kbd) {
+	public Player(String string, int boardsize, Scanner kbd, int numStones) {
 		this.name = string;
 		this.kbd = kbd;
 		pits = new int[boardsize];
-		Arrays.fill(pits, 4);
+		Arrays.fill(pits, numStones);
 	}
 
 	public int getMancala() {
@@ -74,26 +74,27 @@ public class Player {
 			stones--;
 		}
 		steal(stones, current);
-		return incrementMancala(stones);
-	}
-
-	public int spreadTheirStones(int stones) {
-		int current = 0;
-		while (current < pits.length && stones > 0) {
-			pits[current++]++;
-			stones--;
+		stones = incrementMancala(stones);
+		if (stones > 0) {
+			stones = opponent.spreadTheirStones(stones, this);
 		}
 		return stones;
 	}
 
-	public int spreadMyStones(int stones) {
+	public int spreadTheirStones(int stones, Player currentPlayer) {
 		int current = 0;
 		while (current < pits.length && stones > 0) {
 			pits[current++]++;
 			stones--;
 		}
-		steal(stones, current);
-		return incrementMancala(stones);
+		if (this == currentPlayer) {
+			steal(stones, current);
+			stones = incrementMancala(stones);
+		}
+		if (stones > 0) {
+			stones = opponent.spreadTheirStones(stones, currentPlayer);
+		}
+		return stones;
 	}
 
 	private void steal(int stones, int current) {
@@ -176,17 +177,16 @@ public class Player {
 			} while (!valid(pit));
 			System.out.println();
 			stones = empty(pit - 1);
-			while (stones > 0) {
-				stones = opponent.spreadTheirStones(stones);
-				if (stones > 0) {
-					stones = spreadMyStones(stones);
+			if (stones < 0) {
+				continue;
+			}
+			for (int pit1 : pits) {
+				if (pit1 > 0) {
+					return true;
 				}
 			}
-			if (Arrays.equals(pits, MancalaBoard.GAMEOVER)) {
-				return false;
-			}
 		}
-		return true;
+		return false;
 	}
 
 	public String getName() {
